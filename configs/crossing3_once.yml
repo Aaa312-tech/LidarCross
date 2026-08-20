@@ -1,0 +1,96 @@
+schema_version: 1
+
+paths:
+  benchmark_root: 'D:\DATE27\LiDAR-main\LiDAR-main\src\picroute\benchmarks'
+  work_root: 'D:\DATE27\lidar_crossing_3\work\crossing3'
+  results_root: 'D:\DATE27\lidar_crossing_3\results\crossing3'
+  frozen_router: 'D:\xprogram\PIC-DB-main\PIC-DB-main\build_native_release\pr_lidar_native.exe'
+  frozen_router_source_root: 'D:\xprogram\PIC-DB-main\PIC-DB-main'
+  frozen_converter: 'D:\xprogram\lidar_crossing_2\code\tools\pr_lidar_native\scripts\lidar_yml_to_picdb_yml.py'
+  frozen_renderer: 'D:\xprogram\lidar_crossing_2\code\tools\pr_lidar_native\scripts\render_route_result_gds.py'
+  frozen_continuity_audit: 'D:\xprogram\lidar_crossing_2\code\tools\crossing_production\audit_route_continuity.py'
+  pdk_angle_audit: 'D:\DATE27\lidar_crossing_3\tools\audit_pdk_angles.py'
+  ripple_placer: 'D:\xprogram\lidar_crossing_2\code\tools\crossing_production\ripple_crossing_placer.py'
+  ripple_placer_config: 'D:\xprogram\lidar_crossing_2\code\configs\crossing_production\default.yml'
+  crossing_estimator: 'D:\xprogram\lidar_crossing_2\code\tools\crossing_production\estimate_crossings.py'
+  crossing_estimator_config: 'D:\xprogram\lidar_crossing_2\code\configs\crossing_production\default.yml'
+  lidar_python_source: 'D:\DATE27\LiDAR-main\LiDAR-main\src'
+
+immutable:
+  original_instances: true
+  allow_source_unplaced_legalization: true
+  detailed_router: true
+  drc: true
+  postprocess: true
+  renderer: true
+  allow_case_specific_rules: false
+  allow_historical_placement_seed: false
+  allow_route_priority_override: true
+
+source_placement:
+  enabled: true
+  algorithm: pdk_port_access_difference_constraints_v1
+  minimum_forward_corridor_um: 14.0
+  collinear_minimum_forward_corridor_um: 18.0
+  collinear_lateral_threshold_um: 30.0
+  displacement_grid_um: 2.0
+
+technology:
+  grid_um: 2.0
+  routing_grid_origin_um: [0.0, 0.0]
+  guide_target_columns: 128
+  bend_radius_um: 5.0
+  waveguide_width_um: 0.5
+  waveguide_spacing_um: 1.0
+  crossing_body_um: 8.0
+  crossing_halo_um: 4.5
+  minimum_access_um: 10.0
+  short_direct_access_threshold_um: 30.0
+  allowed_rotations_deg: [0.0, -45.0]
+
+prediction:
+  algorithm: production_estimator_adapter_v2
+  endpoint_epsilon_um: 0.000001
+  enable_capacity_recrossing: true
+  suppress_overpacked_capacity_components: true
+  maximum_recrossings_per_pair: 1
+  corridor_pressure_ratio: 3.0
+  minimum_stage_source_pairs: 8
+
+placement:
+  algorithm: hybrid_access_ripple_v2
+  ripple_window_radius_um: 180.0
+  ripple_minimum_events_per_net: 3
+  candidate_limit: 48
+  candidate_radius_um: 80.0
+  candidate_max_radius_um: 160.0
+  candidate_expansion_factor: 1.5
+  minimum_legal_candidates: 12
+  candidate_ring_step_um: 4.0
+  placement_access_samples: 32
+  topology_order_spacing_um: 0.0
+  small_braid_access_refinement: true
+  small_braid_candidate_limit: 256
+  finite_clearance_refinement: true
+  dense_ladder_refinement: true
+  routing_track_search_rings: 4
+  dense_ladder_one_pitch_penalty: 2.5
+  dense_ladder_two_pitch_penalty: 3.0
+  direction_chain_refinement: true
+  direction_chain_refinement_radius_um: 16.0
+  direction_chain_candidate_limit: 240
+  direction_chain_refinement_passes: 3
+  maximum_component_events: 40
+  solver_time_limit_s: 120.0
+  lns_rounds: 8
+
+feedback:
+  maximum_attempts: 1
+  maximum_plateau_accepts_at_score: 4
+  terminal_lateral_max_um: 6.0
+  failure_directed_priority: true
+  initial_max_search_expanded: 250000
+  maximum_max_search_expanded: 250000
+  mfot_mode: 'off'
+  allow_pair_preserving_recrossing: true
+  orientation_no_good_feedback: true
